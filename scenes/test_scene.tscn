@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://c61y8ejm8xyl2"]
+
+[ext_resource type="Texture2D" uid="uid://g50rj6xpawiu" path="res://models/textures/Name_1m x 1m.png" id="1_g7g4h"]
+[ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://addons/fpc/character.tscn" id="2_j8ivh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j8ivh"]
+albedo_texture = ExtResource("1_g7g4h")
+normal_scale = 0.3
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_nd71p"]
+material = SubResource("StandardMaterial3D_j8ivh")
+size = Vector2(200, 200)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_j8ivh"]
+data = PackedVector3Array(100, 0, 100, -100, 0, 100, 100, 0, -100, -100, 0, 100, -100, 0, -100, 100, 0, -100)
+
+[node name="test_scene" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_nd71p")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_j8ivh")
+
+[node name="Character" parent="." instance=ExtResource("2_j8ivh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.382215, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.973283, 0.229608, 0, -0.229608, 0.973283, 0, 9.81293, 15.4)
