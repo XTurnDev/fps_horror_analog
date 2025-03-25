@@ -1,3 +1,22 @@
-[gd_scene format=3 uid="uid://boqgrqojv64yn"]
+[gd_scene load_steps=5 format=3 uid="uid://boqgrqojv64yn"]
+
+[ext_resource type="PackedScene" uid="uid://0pfi780h7g63" path="res://scenes/player.tscn" id="1_nnsk1"]
+[ext_resource type="Script" uid="uid://4qve3qcj553w" path="res://Basic-FPS-Player-GODOT-4.0-526baef7d1990dc2c4e2d3de5a3f910c45c4ec55/addons/Basic FPS Player/basic_fps_player.gd" id="2_rwgxs"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e5uuo"]
+albedo_color = Color(0.58896, 0.373994, 0.348423, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nnsk1"]
+material = SubResource("StandardMaterial3D_e5uuo")
 
 [node name="World" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(4.72336, 0, 0, 0, 0.0663319, 0, 0, 0, 3.77675, 0, 0, 0)
+mesh = SubResource("BoxMesh_nnsk1")
+
+[node name="Node3D" parent="." instance=ExtResource("1_nnsk1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.120232, 0, 0.0531814)
+
+[node name="EditorPlugin" type="EditorPlugin" parent="."]
+script = ExtResource("2_rwgxs")

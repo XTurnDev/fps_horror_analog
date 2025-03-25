@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://0pfi780h7g63"]
+
+[ext_resource type="PackedScene" uid="uid://kmyakts4l64t" path="res://Basic-FPS-Player-GODOT-4.0-526baef7d1990dc2c4e2d3de5a3f910c45c4ec55/addons/Basic FPS Player/Src/basic_player_head.tscn" id="2_qhqgy"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dqkch"]
+
+[node name="Node3D" type="CharacterBody3D"]
+
+[node name="Head" type="Node3D" parent="." instance=ExtResource("2_qhqgy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_dqkch")

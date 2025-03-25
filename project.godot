@@ -11,5 +11,10 @@ config_version=5
 [application]
 
 config/name="fps_horror_analoh"
+run/main_scene="uid://boqgrqojv64yn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
