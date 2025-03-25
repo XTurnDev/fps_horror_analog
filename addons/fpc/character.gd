@@ -168,6 +168,7 @@ func _process(_delta):
 	if debug_enabled:
 		handle_debug_menu()
 
+	handle_raycast()
 	update_debug_menu_per_frame()
 
 
@@ -499,3 +500,8 @@ func handle_pausing():
 func handle_debug_menu():
 	if Input.is_action_just_pressed(controls.FPS):
 		$UserInterface/DebugPanel.visible = not $UserInterface/DebugPanel.visible
+
+func handle_raycast():
+	if INTERACTION_RAYC.is_colliding():
+		var collider = INTERACTION_RAYC.get_collider()
+		print(collider)
