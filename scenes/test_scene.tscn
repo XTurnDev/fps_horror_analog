@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://c61y8ejm8xyl2"]
+[gd_scene load_steps=10 format=3 uid="uid://c61y8ejm8xyl2"]
 
 [ext_resource type="Texture2D" uid="uid://g50rj6xpawiu" path="res://models/textures/Name_1m x 1m.png" id="1_g7g4h"]
 [ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://addons/fpc/character.tscn" id="2_j8ivh"]
+[ext_resource type="PackedScene" uid="uid://dgkbvwtyh5lk1" path="res://scenes/pc.tscn" id="3_nd71p"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j8ivh"]
 albedo_texture = ExtResource("1_g7g4h")
@@ -20,7 +21,7 @@ data = PackedVector3Array(100, 0, 100, -100, 0, 100, 100, 0, -100, -100, 0, 100,
 albedo_texture = ExtResource("1_g7g4h")
 uv1_triplanar = true
 
-[sub_resource type="BoxMesh" id="BoxMesh_7ddre"]
+[sub_resource type="BoxMesh" id="BoxMesh_j8ivh"]
 material = SubResource("StandardMaterial3D_nd71p")
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_nd71p"]
@@ -42,11 +43,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.382215, 0)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.973283, 0.229608, 0, -0.229608, 0.973283, 0, 9.81293, 15.4)
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6.593)
-mesh = SubResource("BoxMesh_7ddre")
+[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.5, 0)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D2" groups=["interactable"]]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_j8ivh")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_nd71p")
+
+[node name="PC" parent="." instance=ExtResource("3_nd71p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295743, 0.5, -6.85784)

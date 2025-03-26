@@ -49,8 +49,10 @@ extends CharacterBody3D
 @export var CROUCH_ANIMATION : AnimationPlayer
 ## A reference to the the player's collision shape for use in the character script.
 @export var COLLISION_MESH : CollisionShape3D
-## A reference tı the player's raycast for interaction
+## A reference to the player's raycast for interaction
 @export var INTERACTION_RAYC : RayCast3D
+## A reference to pause menu 
+@export var PAUSE_MENU : PanelContainer
 
 #endregion
 
@@ -67,7 +69,6 @@ extends CharacterBody3D
 	JUMP = "move_jump",
 	CROUCH = "crouch",
 	SPRINT = "sprint",
-	PAUSE = "ui_pause",
 	FPS = "ui_fps"
 	}
 @export_subgroup("Controller Specific")
@@ -140,6 +141,9 @@ var gravity : float = ProjectSettings.get_setting("physics/3d/default_gravity") 
 # Stores mouse input for rotating the camera in the physics process
 var mouseInput : Vector2 = Vector2(0,0)
 
+var canInteract: bool = false
+
+var inPc: bool = false
 #endregion
 
 
@@ -156,15 +160,13 @@ func _ready():
 
 	if default_reticle:
 		change_reticle(default_reticle)
-
+		
 	initialize_animations()
 	check_controls()
 	enter_normal_state()
 
 
 func _process(_delta):
-	if pausing_enabled:
-		handle_pausing()
 	if debug_enabled:
 		handle_debug_menu()
 
@@ -291,9 +293,6 @@ func check_controls(): # If you add a control, you might want to add a check for
 	if !InputMap.has_action(controls.BACKWARD):
 		push_error("No control mapped for move backward. Please add an input map control. Disabling movement.")
 		immobile = true
-	if !InputMap.has_action(controls.PAUSE):
-		push_error("No control mapped for pause. Please add an input map control. Disabling pausing.")
-		pausing_enabled = false
 	if !InputMap.has_action(controls.CROUCH):
 		push_error("No control mapped for crouch. Please add an input map control. Disabling crouching.")
 		crouch_enabled = false
@@ -481,20 +480,6 @@ func update_camera_fov():
 		CAMERA.fov = lerp(CAMERA.fov, 85.0, 0.3)
 	else:
 		CAMERA.fov = lerp(CAMERA.fov, 75.0, 0.3)
-
-func handle_pausing():
-	if Input.is_action_just_pressed(controls.PAUSE):
-		# You may want another node to handle pausing, because this player may get paused too.
-		match Input.mouse_mode:
-			Input.MOUSE_MODE_CAPTURED:
-				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-				
-				#get_tree().paused = false
-			Input.MOUSE_MODE_VISIBLE:
-				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-				#get_tree().paused = false
-				
-
 #endregion
 
 func handle_debug_menu():
@@ -504,4 +489,22 @@ func handle_debug_menu():
 func handle_raycast():
 	if INTERACTION_RAYC.is_colliding():
 		var collider = INTERACTION_RAYC.get_collider()
-		print(collider)
+		if collider.is_in_group("interactable"):
+			if not canInteract:
+				canInteract = true
+				$UserInterface/InteractionTest/TextInteract.text = "interactable"
+			if canInteract:
+				if Input.is_action_just_pressed("action_interact"):
+					if collider.is_in_group("pc"):
+						if not inPc:
+							inPc = true
+							collider.focus_screen()
+							Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+						else:
+							inPc = false
+							collider.unfocus_screen()
+							Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		else:
+			if canInteract:
+				canInteract = false
+				$UserInterface/InteractionTest/TextInteract.text = ""
