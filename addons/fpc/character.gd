@@ -51,8 +51,8 @@ extends CharacterBody3D
 @export var COLLISION_MESH : CollisionShape3D
 ## A reference to the player's raycast for interaction
 @export var INTERACTION_RAYC : RayCast3D
-## A reference to pause menu 
-@export var PAUSE_MENU : PanelContainer
+
+@export var PC_SCREEN : Control
 
 #endregion
 
@@ -498,11 +498,13 @@ func handle_raycast():
 					if collider.is_in_group("pc"):
 						if not inPc:
 							inPc = true
-							collider.focus_screen()
+							PC_SCREEN.visible = true
+							RETICLE.visible = false
 							Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 						else:
 							inPc = false
-							collider.unfocus_screen()
+							PC_SCREEN.visible = false
+							RETICLE.visible = true
 							Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		else:
 			if canInteract:

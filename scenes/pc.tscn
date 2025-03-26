@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dgkbvwtyh5lk1"]
+[gd_scene load_steps=6 format=3 uid="uid://dgkbvwtyh5lk1"]
 
 [ext_resource type="Texture2D" uid="uid://g50rj6xpawiu" path="res://models/textures/Name_1m x 1m.png" id="1_5rl7t"]
 [ext_resource type="Script" uid="uid://cienxi53nmwbq" path="res://scripts/pc.gd" id="1_qd3p6"]
-[ext_resource type="PackedScene" uid="uid://dniiajm37akrk" path="res://scenes/pc_screen.tscn" id="3_o5wjj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qd3p6"]
 albedo_color = Color(0.760265, 0.482646, 0.869274, 1)
@@ -23,5 +22,3 @@ mesh = SubResource("BoxMesh_o5wjj")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("ConcavePolygonShape3D_2wdt7")
-
-[node name="PcScreen" parent="." instance=ExtResource("3_o5wjj")]

@@ -1,9 +1,11 @@
-[gd_scene load_steps=25 format=3 uid="uid://cc1m2a1obsyn4"]
+[gd_scene load_steps=27 format=3 uid="uid://cc1m2a1obsyn4"]
 
 [ext_resource type="Script" uid="uid://driibtedhksyc" path="res://addons/fpc/character.gd" id="1_0t4e8"]
 [ext_resource type="FontFile" uid="uid://co037mgpdno1" path="res://fonts/vhs-gothic.ttf" id="3_4fv23"]
 [ext_resource type="Script" uid="uid://dni7b35bxjk4h" path="res://addons/fpc/EditorModule.gd" id="3_v3ckk"]
 [ext_resource type="Script" uid="uid://cbem6pgqju6od" path="res://addons/fpc/debug.gd" id="3_x1wcc"]
+[ext_resource type="PackedScene" uid="uid://dniiajm37akrk" path="res://scenes/pc_screen.tscn" id="4_4fv23"]
+[ext_resource type="Script" uid="uid://c4d7rsxbr62fx" path="res://scripts/control/pause_menu.gd" id="4_gv6je"]
 [ext_resource type="Script" uid="uid://bcyi0sc2ln11u" path="res://scripts/pause_handler.gd" id="6_gv6je"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp17n"]
@@ -385,7 +387,7 @@ font = ExtResource("3_4fv23")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_k4wwl"]
 
-[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("HEAD", "CAMERA", "HEADBOB_ANIMATION", "JUMP_ANIMATION", "CROUCH_ANIMATION", "COLLISION_MESH", "INTERACTION_RAYC", "PAUSE_MENU")]
+[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("HEAD", "CAMERA", "HEADBOB_ANIMATION", "JUMP_ANIMATION", "CROUCH_ANIMATION", "COLLISION_MESH", "INTERACTION_RAYC", "PC_SCREEN")]
 script = ExtResource("1_0t4e8")
 default_reticle = "uid://coqpusufa8a6k"
 HEAD = NodePath("Head")
@@ -395,7 +397,7 @@ JUMP_ANIMATION = NodePath("Head/JumpAnimation")
 CROUCH_ANIMATION = NodePath("CrouchAnimation")
 COLLISION_MESH = NodePath("Collision")
 INTERACTION_RAYC = NodePath("Head/InteractionDetection")
-PAUSE_MENU = NodePath("")
+PC_SCREEN = NodePath("UserInterface/PcScreen")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -472,18 +474,28 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_4fv23")
 text = "test"
 
+[node name="PcScreen" parent="UserInterface" instance=ExtResource("4_4fv23")]
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
 [node name="PauseMenu" type="Control" parent="UserInterface"]
 process_mode = 3
 visible = false
-z_index = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("4_gv6je")
 
 [node name="Panel" type="Panel" parent="UserInterface/PauseMenu"]
+z_index = 1
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -537,3 +549,5 @@ script = ExtResource("3_v3ckk")
 process_mode = 3
 script = ExtResource("6_gv6je")
 character = NodePath("..")
+
+[connection signal="pressed" from="UserInterface/PauseMenu/Panel/VBoxContainer/Button" to="UserInterface/PauseMenu" method="_on_button_pressed"]
