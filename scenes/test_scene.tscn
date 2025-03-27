@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c61y8ejm8xyl2"]
+[gd_scene load_steps=14 format=3 uid="uid://c61y8ejm8xyl2"]
 
 [ext_resource type="Texture2D" uid="uid://g50rj6xpawiu" path="res://models/textures/Name_1m x 1m.png" id="1_g7g4h"]
 [ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://addons/fpc/character.tscn" id="2_j8ivh"]
@@ -27,6 +27,19 @@ material = SubResource("StandardMaterial3D_nd71p")
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_nd71p"]
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7ddre"]
+sky_top_color = Color(0.0930334, 0.185182, 0.238393, 1)
+sky_horizon_color = Color(0.143635, 0.148119, 0.155197, 1)
+
+[sub_resource type="Sky" id="Sky_qjeyg"]
+sky_material = SubResource("ProceduralSkyMaterial_7ddre")
+
+[sub_resource type="Environment" id="Environment_3qnke"]
+background_mode = 2
+sky = SubResource("Sky_qjeyg")
+glow_enabled = true
+glow_blend_mode = 1
 
 [node name="test_scene" type="Node3D"]
 
@@ -57,3 +70,6 @@ transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 
 
 [node name="crate" parent="." instance=ExtResource("4_7ddre")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.08681, 0.5, -2.44653)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_3qnke")

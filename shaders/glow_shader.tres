@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dwytndryrl6l3"]
+
+[ext_resource type="Shader" uid="uid://d3pfvrrl4pp8o" path="res://shaders/shader_scripts/glow.gdshader" id="1_sg8a0"]
+
+[resource]
+shader = ExtResource("1_sg8a0")
+shader_parameter/bloomRadius = 5.0
+shader_parameter/bloomThreshold = 5.0
+shader_parameter/bloomIntensity = 5.0
