@@ -53,4 +53,4 @@ mesh = SubResource("BoxMesh_j8ivh")
 shape = SubResource("ConcavePolygonShape3D_nd71p")
 
 [node name="PC" parent="." instance=ExtResource("3_nd71p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295743, 0.5, -6.85784)
+transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.54, 0, 0.5, 0, -2.18557e-08, -0.295743, 0.146722, -6.85784)

@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://pe2xhjk78uwk"]
+
+[ext_resource type="PackedScene" uid="uid://df8guvkfjacec" path="res://assets/keyboard.blend" id="1_5v3j4"]
+[ext_resource type="Texture2D" uid="uid://hcj3i8h74c0q" path="res://assets/Textures Set.png" id="2_s0kss"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cus45"]
+albedo_texture = ExtResource("2_s0kss")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bgdgt"]
+albedo_texture = ExtResource("2_s0kss")
+
+[node name="keyboard" instance=ExtResource("1_5v3j4")]
+
+[node name="Cube" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_cus45")
+
+[node name="Cube_001" parent="." index="1"]
+material_override = SubResource("StandardMaterial3D_bgdgt")

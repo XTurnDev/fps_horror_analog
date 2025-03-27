@@ -1,0 +1,12 @@
+[gd_scene load_steps=4 format=3 uid="uid://dpawlmkpqp4mh"]
+
+[ext_resource type="PackedScene" uid="uid://sfa3x4a1ybmg" path="res://assets/pc_monitor.blend" id="1_3yncq"]
+[ext_resource type="Texture2D" uid="uid://hcj3i8h74c0q" path="res://assets/Textures Set.png" id="2_hsgfq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_daqay"]
+albedo_texture = ExtResource("2_hsgfq")
+
+[node name="pc_monitor" instance=ExtResource("1_3yncq")]
+
+[node name="Cube" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_daqay")
