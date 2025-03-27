@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bo72005s24ttl"]
+
+[ext_resource type="PackedScene" uid="uid://ch016ts2e25f" path="res://assets/crate/crate_empty.tscn" id="1_opxtp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aycsp"]
+size = Vector3(2, 2, 2)
+
+[node name="crate" type="RigidBody3D" groups=["holdable", "interactable"]]
+mass = 10.0
+
+[node name="crate" parent="." instance=ExtResource("1_opxtp")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_aycsp")

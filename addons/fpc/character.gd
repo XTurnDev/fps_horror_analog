@@ -54,6 +54,10 @@ extends CharacterBody3D
 
 @export var PC_SCREEN : Control
 
+@export var PLAYER_UI: PanelContainer
+
+@export var CRATE_HOLD : Node3D
+
 #endregion
 
 #region Controls Export Group
@@ -144,6 +148,14 @@ var mouseInput : Vector2 = Vector2(0,0)
 var canInteract: bool = false
 
 var inPc: bool = false
+
+var holding : bool = false
+
+var money: int = 0
+
+var holding_item: String = ""
+
+signal money_gain
 #endregion
 
 
@@ -160,18 +172,20 @@ func _ready():
 
 	if default_reticle:
 		change_reticle(default_reticle)
-		
+	
+	
 	initialize_animations()
 	check_controls()
 	enter_normal_state()
+	handle_money()
 
 
 func _process(_delta):
-	if debug_enabled:
-		handle_debug_menu()
 
 	handle_raycast()
 	update_debug_menu_per_frame()
+	
+	_push_away_rigid_bodies()
 
 
 func _physics_process(delta): # Most things happen here.
@@ -461,6 +475,9 @@ func _unhandled_input(event : InputEvent):
 			# Where we're going, we don't need InputMap
 			if event.keycode == 4194338: # F7
 				$UserInterface/DebugPanel.visible = !$UserInterface/DebugPanel.visible
+	if event.is_action_pressed("action_drop"):
+		if holding:
+			handle_dropping()
 
 #endregion
 
@@ -482,13 +499,11 @@ func update_camera_fov():
 		CAMERA.fov = lerp(CAMERA.fov, 75.0, 0.3)
 #endregion
 
-func handle_debug_menu():
-	if Input.is_action_just_pressed(controls.FPS):
-		$UserInterface/DebugPanel.visible = not $UserInterface/DebugPanel.visible
-
 func handle_raycast():
 	if INTERACTION_RAYC.is_colliding():
 		var collider = INTERACTION_RAYC.get_collider()
+		if not collider:
+			return
 		if collider.is_in_group("interactable"):
 			if not canInteract:
 				canInteract = true
@@ -506,7 +521,52 @@ func handle_raycast():
 							PC_SCREEN.visible = false
 							RETICLE.visible = true
 							Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+					if collider.is_in_group("holdable"):
+						if not holding:
+							holding_item = collider.name
+							$Head.get_node(holding_item).visible = true
+							holding = true
+							collider.queue_free()
 		else:
 			if canInteract:
+				$UserInterface/InteractionTest/TextInteract.text = " "
 				canInteract = false
-				$UserInterface/InteractionTest/TextInteract.text = ""
+
+func handle_dropping():
+	var droppable_items = {
+		"crate" = preload("res://assets/crate/crate_rigid.tscn")
+	}
+	var instance = droppable_items[holding_item].instantiate()
+	instance.position = $Head/DroppingPoint.global_position
+	instance.rotation = $Head/DroppingPoint.global_rotation
+	get_parent().add_child(instance)
+	$Head.get_node(holding_item).visible = false
+	holding = false
+
+func handle_money():
+	var money_text = PLAYER_UI.get_node("MoneyText")
+	money_text.text = "%d $" % [money]
+
+func _on_money_gain() -> void:
+	handle_money()
+	
+func _push_away_rigid_bodies():
+	for i in get_slide_collision_count():
+		var c := get_slide_collision(i)
+		if c.get_collider() is RigidBody3D:
+			var push_dir = -c.get_normal()
+			# How much velocity the object needs to increase to match player velocity in the push direction
+			var velocity_diff_in_push_dir = self.velocity.dot(push_dir) - c.get_collider().linear_velocity.dot(push_dir)
+			# Only count velocity towards push dir, away from character
+			velocity_diff_in_push_dir = max(0., velocity_diff_in_push_dir)
+			# Objects with more mass than us should be harder to push. But doesn't really make sense to push faster than we are going
+			const MY_APPROX_MASS_KG = 80.0
+			var mass_ratio = min(1., MY_APPROX_MASS_KG / c.get_collider().mass)
+			# Optional add: Don't push object at all if it's 4x heavier or more
+			if mass_ratio < 0.25:
+				continue
+			# Don't push object from above/below
+			push_dir.y = 0
+			# 5.0 is a magic number, adjust to your needs
+			var push_force = mass_ratio * 5.0
+			c.get_collider().apply_impulse(push_dir * velocity_diff_in_push_dir * push_force, c.get_position() - c.get_collider().global_position)

@@ -1,12 +1,13 @@
 extends Control
 
 @export var label : Label
+@export var player: CharacterBody3D
 
-var counter: int = 0
 
 func _ready() -> void:
-	label.text = str(counter)
+	label.text = str(player.money)
 
 func _on_button_pressed() -> void:
-	counter += 1
-	label.text = str(counter)
+	player.money += 1
+	label.text = str(player.money)
+	player.money_gain.emit()

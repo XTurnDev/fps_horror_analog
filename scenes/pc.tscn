@@ -6,20 +6,20 @@
 [ext_resource type="PackedScene" uid="uid://dpawlmkpqp4mh" path="res://assets/pc_monitor.tscn" id="4_uuu8i"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2wdt7"]
-size = Vector3(3.00256, 3.22961, 5.25525)
+size = Vector3(2.89288, 2.77359, 2.41071)
 
 [node name="PC" type="StaticBody3D" groups=["interactable", "pc"]]
 script = ExtResource("1_qd3p6")
 
 [node name="keyboard" parent="." instance=ExtResource("2_2wdt7")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.75821, 0, 0.0876718)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.758, -0.199628, 0.088)
 
 [node name="pc_case" parent="." instance=ExtResource("3_heffb")]
-transform = Transform3D(0.487106, 0, -0.121841, 0, 0.63, 0, 0.112816, 0, 0.526075, 0.119732, 0.0105047, -3.21943)
+transform = Transform3D(0.487106, 0, -0.121841, 0, 0.63, 0, 0.112816, 0, 0.526075, 0.12, -0.2, -3.219)
 
 [node name="pc_monitor" parent="." instance=ExtResource("4_uuu8i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.817971, 1, 0.0876718)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.732117, 1.11481, -1.22443)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.677277, 0.886795, 0.197845)
 shape = SubResource("BoxShape3D_2wdt7")

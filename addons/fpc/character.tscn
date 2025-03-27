@@ -1,12 +1,14 @@
-[gd_scene load_steps=27 format=3 uid="uid://cc1m2a1obsyn4"]
+[gd_scene load_steps=30 format=3 uid="uid://cc1m2a1obsyn4"]
 
 [ext_resource type="Script" uid="uid://driibtedhksyc" path="res://addons/fpc/character.gd" id="1_0t4e8"]
+[ext_resource type="PackedScene" uid="uid://ch016ts2e25f" path="res://assets/crate/crate_empty.tscn" id="2_q34qd"]
 [ext_resource type="FontFile" uid="uid://co037mgpdno1" path="res://fonts/vhs-gothic.ttf" id="3_4fv23"]
 [ext_resource type="Script" uid="uid://dni7b35bxjk4h" path="res://addons/fpc/EditorModule.gd" id="3_v3ckk"]
 [ext_resource type="Script" uid="uid://cbem6pgqju6od" path="res://addons/fpc/debug.gd" id="3_x1wcc"]
 [ext_resource type="PackedScene" uid="uid://dniiajm37akrk" path="res://scenes/pc_screen.tscn" id="4_4fv23"]
 [ext_resource type="Script" uid="uid://c4d7rsxbr62fx" path="res://scripts/control/pause_menu.gd" id="4_gv6je"]
 [ext_resource type="Script" uid="uid://bcyi0sc2ln11u" path="res://scripts/pause_handler.gd" id="6_gv6je"]
+[ext_resource type="FontFile" uid="uid://663yiuy831ly" path="res://fonts/Retro Gaming.ttf" id="6_q62an"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp17n"]
 albedo_color = Color(0.909804, 0.596078, 0, 1)
@@ -382,12 +384,19 @@ MarginContainer/constants/margin_left = 10
 MarginContainer/constants/margin_right = 10
 MarginContainer/constants/margin_top = 10
 
+[sub_resource type="LabelSettings" id="LabelSettings_q34qd"]
+font = ExtResource("6_q62an")
+font_size = 22
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(2, 2)
+
 [sub_resource type="LabelSettings" id="LabelSettings_qaoyu"]
 font = ExtResource("3_4fv23")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_k4wwl"]
 
-[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("HEAD", "CAMERA", "HEADBOB_ANIMATION", "JUMP_ANIMATION", "CROUCH_ANIMATION", "COLLISION_MESH", "INTERACTION_RAYC", "PC_SCREEN")]
+[node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("HEAD", "CAMERA", "HEADBOB_ANIMATION", "JUMP_ANIMATION", "CROUCH_ANIMATION", "COLLISION_MESH", "INTERACTION_RAYC", "PC_SCREEN", "PLAYER_UI", "CRATE_HOLD")]
 script = ExtResource("1_0t4e8")
 default_reticle = "uid://coqpusufa8a6k"
 HEAD = NodePath("Head")
@@ -398,6 +407,8 @@ CROUCH_ANIMATION = NodePath("CrouchAnimation")
 COLLISION_MESH = NodePath("Collision")
 INTERACTION_RAYC = NodePath("Head/InteractionDetection")
 PC_SCREEN = NodePath("UserInterface/PcScreen")
+PLAYER_UI = NodePath("UserInterface/Gui")
+CRATE_HOLD = NodePath("Head/crate")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -431,6 +442,13 @@ speed_scale = 4.0
 
 [node name="InteractionDetection" type="RayCast3D" parent="Head"]
 target_position = Vector3(0, 0, -3)
+
+[node name="crate" parent="Head" instance=ExtResource("2_q34qd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.383021, -0.59847, -1.25077)
+visible = false
+
+[node name="DroppingPoint" type="Marker3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.39732)
 
 [node name="UserInterface" type="Control" parent="."]
 layout_mode = 3
@@ -472,9 +490,8 @@ grow_vertical = 0
 [node name="TextInteract" type="Label" parent="UserInterface/InteractionTest"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_4fv23")
-text = "test"
 
-[node name="PcScreen" parent="UserInterface" instance=ExtResource("4_4fv23")]
+[node name="PcScreen" parent="UserInterface" node_paths=PackedStringArray("player") instance=ExtResource("4_4fv23")]
 visible = false
 layout_mode = 0
 anchors_preset = 0
@@ -482,6 +499,23 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
+player = NodePath("../..")
+
+[node name="Gui" type="PanelContainer" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -151.0
+offset_bottom = 64.0
+grow_horizontal = 0
+
+[node name="MoneyText" type="Label" parent="UserInterface/Gui"]
+layout_mode = 2
+text = " "
+label_settings = SubResource("LabelSettings_q34qd")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="PauseMenu" type="Control" parent="UserInterface"]
 process_mode = 3
@@ -550,4 +584,5 @@ process_mode = 3
 script = ExtResource("6_gv6je")
 character = NodePath("..")
 
+[connection signal="money_gain" from="." to="." method="_on_money_gain"]
 [connection signal="pressed" from="UserInterface/PauseMenu/Panel/VBoxContainer/Button" to="UserInterface/PauseMenu" method="_on_button_pressed"]

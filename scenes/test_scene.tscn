@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://c61y8ejm8xyl2"]
+[gd_scene load_steps=11 format=3 uid="uid://c61y8ejm8xyl2"]
 
 [ext_resource type="Texture2D" uid="uid://g50rj6xpawiu" path="res://models/textures/Name_1m x 1m.png" id="1_g7g4h"]
 [ext_resource type="PackedScene" uid="uid://cc1m2a1obsyn4" path="res://addons/fpc/character.tscn" id="2_j8ivh"]
 [ext_resource type="PackedScene" uid="uid://dgkbvwtyh5lk1" path="res://scenes/pc.tscn" id="3_nd71p"]
+[ext_resource type="PackedScene" uid="uid://bo72005s24ttl" path="res://assets/crate/crate_rigid.tscn" id="4_7ddre"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j8ivh"]
 albedo_texture = ExtResource("1_g7g4h")
@@ -38,12 +39,11 @@ mesh = SubResource("PlaneMesh_nd71p")
 shape = SubResource("ConcavePolygonShape3D_j8ivh")
 
 [node name="Character" parent="." instance=ExtResource("2_j8ivh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.382215, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.973283, 0.229608, 0, -0.229608, 0.973283, 0, 9.81293, 15.4)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["interactable"]]
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.5, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
@@ -53,4 +53,7 @@ mesh = SubResource("BoxMesh_j8ivh")
 shape = SubResource("ConcavePolygonShape3D_nd71p")
 
 [node name="PC" parent="." instance=ExtResource("3_nd71p")]
-transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.54, 0, 0.5, 0, -2.18557e-08, -0.295743, 0.146722, -6.85784)
+transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, -0.29225, 0.146723, -6.80305)
+
+[node name="crate" parent="." instance=ExtResource("4_7ddre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.08681, 0.5, -2.44653)
