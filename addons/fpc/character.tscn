@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cc1m2a1obsyn4"]
+[gd_scene load_steps=34 format=3 uid="uid://cc1m2a1obsyn4"]
 
 [ext_resource type="Script" uid="uid://driibtedhksyc" path="res://addons/fpc/character.gd" id="1_0t4e8"]
 [ext_resource type="PackedScene" uid="uid://ch016ts2e25f" path="res://assets/crate/crate_empty.tscn" id="2_q34qd"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://c4d7rsxbr62fx" path="res://scripts/control/pause_menu.gd" id="4_gv6je"]
 [ext_resource type="Script" uid="uid://bcyi0sc2ln11u" path="res://scripts/pause_handler.gd" id="6_gv6je"]
 [ext_resource type="FontFile" uid="uid://663yiuy831ly" path="res://fonts/Retro Gaming.ttf" id="6_q62an"]
+[ext_resource type="Script" uid="uid://c1pms0eam30k8" path="res://scripts/control/stamina_bar.gd" id="10_ex63h"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp17n"]
 albedo_color = Color(0.909804, 0.596078, 0, 1)
@@ -378,11 +379,16 @@ _data = {
 &"land_right": SubResource("Animation_vsknp")
 }
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_k4wwl"]
+
 [sub_resource type="Theme" id="Theme_wdf0f"]
 MarginContainer/constants/margin_bottom = 10
 MarginContainer/constants/margin_left = 10
 MarginContainer/constants/margin_right = 10
 MarginContainer/constants/margin_top = 10
+
+[sub_resource type="LabelSettings" id="LabelSettings_qaoyu"]
+font = ExtResource("3_4fv23")
 
 [sub_resource type="LabelSettings" id="LabelSettings_q34qd"]
 font = ExtResource("6_q62an")
@@ -391,10 +397,42 @@ shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 shadow_offset = Vector2(2, 2)
 
-[sub_resource type="LabelSettings" id="LabelSettings_qaoyu"]
-font = ExtResource("3_4fv23")
+[sub_resource type="Animation" id="Animation_q34qd"]
+resource_name = "pop"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_k4wwl"]
+[sub_resource type="Animation" id="Animation_ex63h"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_go8lt"]
+_data = {
+&"RESET": SubResource("Animation_ex63h"),
+&"pop": SubResource("Animation_q34qd")
+}
 
 [node name="Character" type="CharacterBody3D" node_paths=PackedStringArray("HEAD", "CAMERA", "HEADBOB_ANIMATION", "JUMP_ANIMATION", "CROUCH_ANIMATION", "COLLISION_MESH", "INTERACTION_RAYC", "PC_SCREEN", "PLAYER_UI", "CRATE_HOLD")]
 script = ExtResource("1_0t4e8")
@@ -407,8 +445,10 @@ CROUCH_ANIMATION = NodePath("CrouchAnimation")
 COLLISION_MESH = NodePath("Collision")
 INTERACTION_RAYC = NodePath("Head/InteractionDetection")
 PC_SCREEN = NodePath("UserInterface/PcScreen")
-PLAYER_UI = NodePath("UserInterface/Gui")
+PLAYER_UI = NodePath("UserInterface/MoneyBox")
 CRATE_HOLD = NodePath("Head/crate")
+sprint_enabled = true
+crouch_enabled = true
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -449,6 +489,19 @@ visible = false
 
 [node name="DroppingPoint" type="Marker3D" parent="Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.39732)
+
+[node name="CrouchCeilingDetection" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_k4wwl")
+target_position = Vector3(0, 0.5, 0)
+
+[node name="EditorModule" type="Node" parent="."]
+script = ExtResource("3_v3ckk")
+
+[node name="PauseHandler" type="Node" parent="." node_paths=PackedStringArray("character")]
+process_mode = 3
+script = ExtResource("6_gv6je")
+character = NodePath("..")
 
 [node name="UserInterface" type="Control" parent="."]
 layout_mode = 3
@@ -500,22 +553,6 @@ anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
 player = NodePath("../..")
-
-[node name="Gui" type="PanelContainer" parent="UserInterface"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -151.0
-offset_bottom = 64.0
-grow_horizontal = 0
-
-[node name="MoneyText" type="Label" parent="UserInterface/Gui"]
-layout_mode = 2
-text = " "
-label_settings = SubResource("LabelSettings_q34qd")
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="PauseMenu" type="Control" parent="UserInterface"]
 process_mode = 3
@@ -571,18 +608,39 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_4fv23")
 text = "QUIT"
 
-[node name="CrouchCeilingDetection" type="ShapeCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("SphereShape3D_k4wwl")
-target_position = Vector3(0, 0.5, 0)
+[node name="MoneyBox" type="PanelContainer" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -96.0
+offset_bottom = 72.0
+grow_horizontal = 0
 
-[node name="EditorModule" type="Node" parent="."]
-script = ExtResource("3_v3ckk")
+[node name="MoneyText" type="Label" parent="UserInterface/MoneyBox"]
+layout_mode = 2
+text = " "
+label_settings = SubResource("LabelSettings_q34qd")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="PauseHandler" type="Node" parent="." node_paths=PackedStringArray("character")]
-process_mode = 3
-script = ExtResource("6_gv6je")
-character = NodePath("..")
+[node name="StaminaBar" type="ProgressBar" parent="UserInterface" node_paths=PackedStringArray("character", "animation_player")]
+layout_mode = 2
+offset_left = 215.0
+offset_top = 453.0
+offset_right = 425.0
+offset_bottom = 467.0
+size_flags_vertical = 8
+rounded = true
+show_percentage = false
+script = ExtResource("10_ex63h")
+character = NodePath("../..")
+animation_player = NodePath("AnimationPlayer")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UserInterface/StaminaBar"]
+libraries = {
+&"": SubResource("AnimationLibrary_go8lt")
+}
 
 [connection signal="money_gain" from="." to="." method="_on_money_gain"]
 [connection signal="pressed" from="UserInterface/PauseMenu/Panel/VBoxContainer/Button" to="UserInterface/PauseMenu" method="_on_button_pressed"]

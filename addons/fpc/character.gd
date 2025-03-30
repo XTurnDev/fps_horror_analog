@@ -131,6 +131,8 @@ extends CharacterBody3D
 # These are variables used in this script that don't need to be exposed in the editor.
 var speed : float = base_speed
 var current_speed : float = 0.0
+
+var stamina : float = 10.0
 # States: normal, crouching, sprinting
 var state : String = "normal"
 var low_ceiling : bool = false # This is for when the ceiling is too low and the player needs to crouch.
@@ -186,6 +188,8 @@ func _process(_delta):
 	update_debug_menu_per_frame()
 	
 	_push_away_rigid_bodies()
+	
+	
 
 
 func _physics_process(delta): # Most things happen here.
@@ -222,10 +226,16 @@ func _physics_process(delta): # Most things happen here.
 	update_debug_menu_per_tick()
 
 	was_on_floor = is_on_floor() # This must always be at the end of physics_process
+	
+	handle_stamina(delta)
+	$UserInterface/StaminaBar.value = stamina * 10
+	
 
 #endregion
 
 #region Input Handling
+
+
 
 func handle_jumping():
 	if jumping_enabled:
@@ -240,6 +250,15 @@ func handle_jumping():
 					JUMP_ANIMATION.play("jump", 0.25)
 				velocity.y += jump_velocity
 
+func handle_stamina(delta):
+	if state == "sprinting":
+		stamina -= delta * 2
+	elif state == "normal":
+		stamina += delta
+	if stamina < 0:
+		stamina = 0
+	if stamina > 10:
+		stamina = 10
 
 func handle_movement(delta, input_dir):
 	var direction = input_dir.rotated(-HEAD.rotation.y)
@@ -321,10 +340,11 @@ func check_controls(): # If you add a control, you might want to add a check for
 func handle_state(moving):
 	if sprint_enabled:
 		if sprint_mode == 0:
-			if Input.is_action_pressed(controls.SPRINT) and state != "crouching":
+			if Input.is_action_pressed(controls.SPRINT) and state != "crouching" and stamina > 0:
 				if moving:
-					if state != "sprinting":
-						enter_sprint_state()
+					if stamina > 2:
+						if state != "sprinting":
+							enter_sprint_state()
 				else:
 					if state == "sprinting":
 						enter_normal_state()
@@ -336,11 +356,12 @@ func handle_state(moving):
 				if Input.is_action_pressed(controls.SPRINT) and state == "normal":
 					enter_sprint_state()
 				if Input.is_action_just_pressed(controls.SPRINT):
-					match state:
-						"normal":
-							enter_sprint_state()
-						"sprinting":
-							enter_normal_state()
+					if stamina > 2:
+						match state:
+							"normal":
+								enter_sprint_state()
+							"sprinting":
+								enter_normal_state()
 			elif state == "sprinting":
 				enter_normal_state()
 

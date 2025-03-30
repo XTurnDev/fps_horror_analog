@@ -43,33 +43,36 @@ glow_blend_mode = 1
 
 [node name="test_scene" type="Node3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CanvasLayer"]
 mesh = SubResource("PlaneMesh_nd71p")
+skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="CanvasLayer/MeshInstance3D"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CanvasLayer/MeshInstance3D/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_j8ivh")
 
-[node name="Character" parent="." instance=ExtResource("2_j8ivh")]
+[node name="Character" parent="CanvasLayer" instance=ExtResource("2_j8ivh")]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CanvasLayer"]
 transform = Transform3D(1, 0, 0, 0, 0.973283, 0.229608, 0, -0.229608, 0.973283, 0, 9.81293, 15.4)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="CanvasLayer"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.5, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CanvasLayer/StaticBody3D"]
 mesh = SubResource("BoxMesh_j8ivh")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CanvasLayer/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_nd71p")
 
-[node name="PC" parent="." instance=ExtResource("3_nd71p")]
+[node name="PC" parent="CanvasLayer" instance=ExtResource("3_nd71p")]
 transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, -0.29225, 0.146723, -6.80305)
 
-[node name="crate" parent="." instance=ExtResource("4_7ddre")]
+[node name="crate" parent="CanvasLayer" instance=ExtResource("4_7ddre")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.08681, 0.5, -2.44653)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="CanvasLayer"]
 environment = SubResource("Environment_3qnke")
